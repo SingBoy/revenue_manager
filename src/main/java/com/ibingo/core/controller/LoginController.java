@@ -60,7 +60,7 @@ public class LoginController extends BaseController {
 			}
 			return "redirect:/welcome/index";
 		} catch (Exception e) {
-			modelMap.put(ConstantConfig.ERROR_MESSAGES, e.getMessage());
+			//modelMap.put(ConstantConfig.ERROR_MESSAGES, e.getMessage());
 			return "login";
 		}
 	}

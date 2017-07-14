@@ -20,4 +20,8 @@ public interface UserMapper {
 	public User selectUserByUsername(String username);
 	
 	public List<User> selectByUsername(String username);
+
+    public Integer selectCount(User queryBean);
+
+    public List<User> selectList(User queryBean);
 }

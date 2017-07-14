@@ -2,7 +2,7 @@ package com.ibingo.core.model;
 
 import java.util.Date;
 
-public class User {
+public class User extends BaseModel{
     private Integer id;
 
     private String username;
@@ -11,7 +11,7 @@ public class User {
 
     private String nickname;
 
-    private Integer userRole;
+    private Integer userRole;//1:超级管理员 2:商务账号 3:客户账号
 
     private Integer userRoleId;//账号对应广告主/渠道的id
 
@@ -23,15 +23,14 @@ public class User {
 
     private String description;
 
+    private Integer businessId;//当账号是客户账号时，需要有个商务对应去管理
+
+    private String businessName;//当账号是客户账号时，需要有个商务对应去管理
+
     private Date createDate;
 
     private Date modifyDate;
     
-    private String keyword;
-    
-    private Integer currentPage;
-    
-    private Integer pageSize;
 
     public Integer getId() {
         return id;
@@ -129,27 +128,19 @@ public class User {
         this.modifyDate = modifyDate;
     }
 
-	public String getKeyword() {
-		return keyword;
-	}
+    public Integer getBusinessId() {
+        return businessId;
+    }
 
-	public void setKeyword(String keyword) {
-		this.keyword = keyword;
-	}
+    public void setBusinessId(Integer businessId) {
+        this.businessId = businessId;
+    }
 
-	public Integer getCurrentPage() {
-		return currentPage;
-	}
+    public String getBusinessName() {
+        return businessName;
+    }
 
-	public void setCurrentPage(Integer currentPage) {
-		this.currentPage = currentPage;
-	}
-
-	public Integer getPageSize() {
-		return pageSize;
-	}
-
-	public void setPageSize(Integer pageSize) {
-		this.pageSize = pageSize;
-	}
+    public void setBusinessName(String businessName) {
+        this.businessName = businessName;
+    }
 }

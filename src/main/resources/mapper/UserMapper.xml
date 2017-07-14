@@ -29,18 +29,7 @@
     delete from t_user
     where id = #{id,jdbcType=INTEGER}
   </delete>
-  <insert id="insert" parameterType="com.ibingo.core.model.User" >
-    insert into t_user (id, username, password, 
-      nickname, user_role, user_role_id, 
-      email, phone, status, 
-      description, create_date, modify_date
-      )
-    values (#{id,jdbcType=INTEGER}, #{username,jdbcType=VARCHAR}, #{password,jdbcType=VARCHAR}, 
-      #{nickname,jdbcType=VARCHAR}, #{userRole,jdbcType=INTEGER}, #{userRoleId,jdbcType=INTEGER}, 
-      #{email,jdbcType=VARCHAR}, #{phone,jdbcType=VARCHAR}, #{status,jdbcType=INTEGER}, 
-      #{description,jdbcType=VARCHAR}, #{createDate,jdbcType=TIMESTAMP}, #{modifyDate,jdbcType=TIMESTAMP}
-      )
-  </insert>
+
   <insert id="insertSelective" parameterType="com.ibingo.core.model.User" >
     insert into t_user
     <trim prefix="(" suffix=")" suffixOverrides="," >
@@ -157,59 +146,14 @@
     </set>
     where id = #{id,jdbcType=INTEGER}
   </update>
-  <update id="updateByPrimaryKey" parameterType="com.ibingo.core.model.User" >
-    update t_user
-    set username = #{username,jdbcType=VARCHAR},
-      password = #{password,jdbcType=VARCHAR},
-      nickname = #{nickname,jdbcType=VARCHAR},
-      user_role = #{userRole,jdbcType=INTEGER},
-      user_role_id = #{userRoleId,jdbcType=INTEGER},
-      email = #{email,jdbcType=VARCHAR},
-      phone = #{phone,jdbcType=VARCHAR},
-      status = #{status,jdbcType=INTEGER},
-      description = #{description,jdbcType=VARCHAR},
-      create_date = #{createDate,jdbcType=TIMESTAMP},
-      modify_date = #{modifyDate,jdbcType=TIMESTAMP}
-    where id = #{id,jdbcType=INTEGER}
-  </update>
+
   
   	<!-- 根据登录名称查询用户信息 -->
 	<select id="selectUserByUsername" resultMap="BaseResultMap" parameterType="java.lang.String">
 		select <include refid="Base_Column_List" /> from t_user where username = #{username} limit 1
 	</select>
 	
-<!--	<select id="selectCountByQueryBean" parameterType="cn.net.ibingo.core.query.UserQueryBean" resultType="java.lang.Integer">
-		select count(id) from t_user 
-		where
-			id > 2 
-			<if test="keyword != null and keyword != ''">
-				and ( username like '%${keyword}%' )
-			</if>
-			<if test="userRoleIds!=null and userRoleIds.size()>0 ">
-				and user_role = 4 
-				and user_role_id in
-				<foreach collection="userRoleIds" item="item" index="index" 
-				open="(" separator="," close=")">#{item}</foreach>
-			</if>
-	</select>
-	<select id="selectByQueryBean" parameterType="cn.net.ibingo.core.query.UserQueryBean" resultMap="BaseResultMap">
-		select <include refid="Base_Column_List" /> from t_user 
-		where
-			id > 2 
-			<if test="keyword != null and keyword != ''">
-				and ( username like '%${keyword}%' )
-			</if>
-			<if test="userRoleIds!=null and userRoleIds.size()>0 ">
-				and user_role = 4 
-				and user_role_id in
-				<foreach collection="userRoleIds" item="item" index="index" 
-				open="(" separator="," close=")">#{item}</foreach>
-			</if>
-		order by 
-			create_date desc 
-		limit ${startIndex}, ${pageSize}
-	</select>-->
-	
+
 	<select id="selectByUsername" resultMap="BaseResultMap" parameterType="java.lang.String">
 		select 
 		<include refid="Base_Column_List" /> 
@@ -217,24 +161,24 @@
 		where username = #{username}
 	</select>
 
-  <!--<select id="selectCount" parameterType="cn.net.ibingo.core.query.UserQueryBean" resultType="java.lang.Integer">
+  <select id="selectCount" parameterType="com.ibingo.core.model.User" resultType="java.lang.Integer">
     select count(id) from t_user
     where
-    id > 2
-    <if test="keyword != null and keyword != ''">
-      and ( username like '%${keyword}%' )
+    user_role = #{userRole,jdbcType=INTEGER}
+    <if test="nickname != null and nickname !=''">
+      and ( username like '%${nickname}%' or nickname like '%${nickname}%' )
     </if>
   </select>
-  <select id="selectList" parameterType="cn.net.ibingo.core.query.UserQueryBean" resultMap="BaseResultMap">
+  <select id="selectList" parameterType="com.ibingo.core.model.User" resultMap="BaseResultMap">
     select <include refid="Base_Column_List" /> from t_user
     where
-    id > 2
-    <if test="keyword != null and keyword != ''">
-      and ( username like '%${keyword}%' )
+    user_role = #{userRole,jdbcType=INTEGER}
+    <if test="nickname != null and nickname !=''">
+      and ( username like '%${nickname}%' or nickname like '%${nickname}%' )
     </if>
     order by
     create_date desc
     limit ${startIndex}, ${pageSize}
-  </select>-->
+  </select>
 
 </mapper>

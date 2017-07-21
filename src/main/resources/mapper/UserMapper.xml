@@ -12,11 +12,13 @@
     <result column="phone" property="phone" jdbcType="VARCHAR" />
     <result column="status" property="status" jdbcType="INTEGER" />
     <result column="description" property="description" jdbcType="VARCHAR" />
+    <result column="business_id" property="businessId" jdbcType="INTEGER" />
+    <result column="business_name" property="businessName" jdbcType="VARCHAR" />
     <result column="create_date" property="createDate" jdbcType="TIMESTAMP" />
     <result column="modify_date" property="modifyDate" jdbcType="TIMESTAMP" />
   </resultMap>
   <sql id="Base_Column_List" >
-    id, username, password, nickname, user_role, user_role_id, email, phone, status, 
+    id, username, password, nickname, user_role, user_role_id, email, phone, status, business_id,
     description, create_date, modify_date
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
@@ -25,10 +27,33 @@
     from t_user
     where id = #{id,jdbcType=INTEGER}
   </select>
+
+  <select id="selectByBusinessId" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select
+    <include refid="Base_Column_List" />
+    from t_user
+    where business_id = #{businessId,jdbcType=INTEGER}
+  </select>
+
+  <select id="selectBusinessList" resultMap="BaseResultMap" >
+    select id,nickname
+    from t_user
+    where user_role = 2
+  </select>
+
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
     delete from t_user
     where id = #{id,jdbcType=INTEGER}
   </delete>
+
+  <!-- 批量删除员工信息 -->
+  <delete id="batchDeleteUser" parameterType="java.lang.Integer">
+    delete from t_user where id in
+    <foreach item="item" collection="array" open="(" separator="," close=")">
+      #{item}
+    </foreach>
+  </delete>
+
 
   <insert id="insertSelective" parameterType="com.ibingo.core.model.User" >
     insert into t_user
@@ -150,7 +175,8 @@
   
   	<!-- 根据登录名称查询用户信息 -->
 	<select id="selectUserByUsername" resultMap="BaseResultMap" parameterType="java.lang.String">
-		select <include refid="Base_Column_List" /> from t_user where username = #{username} limit 1
+		select <include refid="Base_Column_List" /> from t_user
+      where username = #{username} limit 1
 	</select>
 	
 
@@ -165,20 +191,36 @@
     select count(id) from t_user
     where
     user_role = #{userRole,jdbcType=INTEGER}
-    <if test="nickname != null and nickname !=''">
-      and ( username like '%${nickname}%' or nickname like '%${nickname}%' )
+    <if test="keyword != null and keyword !=''">
+      and ( username like '%${keyword}%' or nickname like '%${keyword}%' )
     </if>
   </select>
   <select id="selectList" parameterType="com.ibingo.core.model.User" resultMap="BaseResultMap">
-    select <include refid="Base_Column_List" /> from t_user
+    select  u1.id, u1.username, u1.nickname, u1.user_role, u1.status, u1.business_id,u2.nickname as business_name,
+    u1.description, u1.create_date from t_user u1
+    LEFT JOIN t_user u2 ON u1.business_id = u2.id
     where
-    user_role = #{userRole,jdbcType=INTEGER}
-    <if test="nickname != null and nickname !=''">
-      and ( username like '%${nickname}%' or nickname like '%${nickname}%' )
+    u1.user_role = #{userRole,jdbcType=INTEGER}
+    <if test="keyword != null and keyword !=''">
+      and ( u1.username like '%${keyword}%' or u1.nickname like '%${keyword}%' )
     </if>
     order by
-    create_date desc
+    u1.create_date desc
     limit ${startIndex}, ${pageSize}
+  </select>
+  <update id="updateBusiness" parameterType="com.ibingo.core.model.User" >
+    update t_user set business_id = #{businessId,jdbcType=INTEGER}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+
+  <update id="updatePassword" parameterType="com.ibingo.core.model.User" >
+    update t_user set password = #{password,jdbcType=INTEGER}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+
+  <select id="selectByUsernameAndRole" parameterType="java.lang.String" resultType="java.lang.Integer">
+    select count(id) FROM t_user
+    where username = #{username,jdbcType=VARCHAR} and user_role = #{userRole,jdbcType=INTEGER}
   </select>
 
 </mapper>

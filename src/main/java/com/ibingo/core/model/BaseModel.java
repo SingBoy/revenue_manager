@@ -1,5 +1,11 @@
 package com.ibingo.core.model;
 
+import com.ibingo.common.utils.DateUtils;
+import org.apache.commons.lang.StringUtils;
+import org.springframework.format.annotation.DateTimeFormat;
+
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -13,6 +19,10 @@ public class BaseModel {
     protected Integer totalCount = 0;
     protected List<String> orderByProperties;
     protected String keyword;
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    protected Date startDate;
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    protected Date endDate;
 
     public BaseModel(){}
 
@@ -167,5 +177,32 @@ public class BaseModel {
 
     public void setKeyword(String keyword) {
         this.keyword = keyword;
+    }
+
+    public Date getStartDate() {
+        return startDate;
+    }
+
+    public void setStartDate(Date startDate) {
+     /*   SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+        Date formatDate = null;
+        if(!StringUtils.isEmpty(df.format(startDate))){
+            formatDate = java.sql.Date.valueOf(df.format(startDate));
+        }*/
+        this.startDate = DateUtils.CTStoDate(startDate);
+    }
+
+    public Date getEndDate() {
+
+        return endDate;
+    }
+
+    public void setEndDate(Date endDate) {
+    /*    SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+        Date formatDate = null;
+        if(!StringUtils.isEmpty(df.format(endDate))){
+            formatDate = java.sql.Date.valueOf(df.format(endDate));
+        }*/
+        this.endDate = DateUtils.CTStoDate(endDate);
     }
 }

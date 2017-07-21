@@ -1,6 +1,7 @@
 package com.ibingo.core.model;
 
 import java.util.Date;
+import java.util.List;
 
 public class Revenue extends BaseModel{
     private Integer id;
@@ -92,4 +93,5 @@ public class Revenue extends BaseModel{
     public void setCreateDate(Date createDate) {
         this.createDate = createDate;
     }
+
 }

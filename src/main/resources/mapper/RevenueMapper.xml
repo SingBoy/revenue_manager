@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ibingo.core.dao.RevenueMapper" >
+  <resultMap id="BaseResultMap" type="com.ibingo.core.model.Revenue" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="game_name" property="gameName" jdbcType="VARCHAR" />
+    <result column="company_name" property="companyName" jdbcType="VARCHAR" />
+    <result column="registered_num" property="registeredNum" jdbcType="INTEGER" />
+    <result column="cuonsum_order_num" property="cuonsumOrderNum" jdbcType="INTEGER" />
+    <result column="cuonsum_num" property="cuonsumNum" jdbcType="INTEGER" />
+    <result column="cuonsum_amount" property="cuonsumAmount" jdbcType="FLOAT" />
+    <result column="date" property="date" jdbcType="TIMESTAMP" />
+    <result column="create_date" property="createDate" jdbcType="TIMESTAMP" />
+    <result column="start_date" property="startDate" jdbcType="TIMESTAMP" />
+    <result column="end_date" property="endDate" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, game_name, company_name, registered_num, cuonsum_order_num, cuonsum_num, cuonsum_amount, date, create_date
+  </sql>
+  <select id="selectById" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from t_revenue
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+
+
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from t_revenue
+    where business_id = #{businessId,jdbcType=INTEGER}
+  </delete>
+
+  <select id="selectCount" parameterType="java.util.Map" resultType="java.lang.Integer">
+    select count(id) from t_revenue
+    where 1=1
+    <if test="companyList != null">
+      and company_name in
+      <foreach item="item" collection="companyList" open="(" separator="," close=")">
+        #{item}
+      </foreach>
+    </if>
+    <if test="keyword != null and keyword !=''">
+      and ( company_name like '%${keyword}%' or game_name like '%${keyword}%' )
+    </if>
+    <if test="startDate != null">
+      and date >= #{startDate,jdbcType=TIMESTAMP}
+    </if>
+    <if test="endDate != null">
+      and date &lt; #{endDate,jdbcType=TIMESTAMP}
+    </if>
+    <if test="createDate != null">
+      and create_date &lt; #{createDate,jdbcType=TIMESTAMP}
+    </if>
+  </select>
+  <select id="selectList" parameterType="com.ibingo.core.model.Revenue" resultMap="BaseResultMap">
+    select <include refid="Base_Column_List" /> from t_revenue
+    where 1=1
+    <if test="companyList != null">
+      and company_name in
+      <foreach item="item" collection="companyList" open="(" separator="," close=")">
+         #{item}
+      </foreach>
+    </if>
+    <if test="keyword != null and keyword !=''">
+      and ( company_name like '%${keyword}%' or game_name like '%${keyword}%' )
+    </if>
+    <if test="startDate != null ">
+      and date >= #{startDate,jdbcType=TIMESTAMP}
+    </if>
+    <if test="endDate != null ">
+      and date &lt; #{endDate,jdbcType=TIMESTAMP}
+    </if>
+    <if test="createDate != null">
+      and create_date &lt; #{createDate,jdbcType=TIMESTAMP}
+    </if>
+    order by
+    date desc
+    limit ${startIndex}, ${pageSize}
+  </select>
+
+
+  <insert id="batchInsterRevenue" parameterType="java.util.List">
+    INSERT INTO t_revenue (game_name, company_name, registered_num, cuonsum_order_num, cuonsum_num, cuonsum_amount, date, create_date)
+    VALUES
+    <foreach collection="list" item="item" index="index" separator=",">
+      (
+      #{item.gameName,jdbcType=VARCHAR},
+      #{item.companyName,jdbcType=VARCHAR},
+      #{item.registeredNum,jdbcType=INTEGER},
+      #{item.cuonsumOrderNum,jdbcType=INTEGER},
+      #{item.cuonsumNum,jdbcType=INTEGER},
+      #{item.cuonsumAmount,jdbcType=FLOAT},
+      #{item.date,jdbcType=TIMESTAMP},
+      #{item.createDate,jdbcType=TIMESTAMP}
+      )
+    </foreach>
+  </insert>
+
+  <!-- 批量删除员工信息 -->
+  <delete id="batchDeleteRevenue" parameterType="java.lang.Integer">
+    delete from t_revenue where id in
+    <foreach item="item" collection="array" open="(" separator="," close=")">
+      #{item}
+    </foreach>
+  </delete>
+
+  <select id="selectCountTotal" parameterType="java.util.Map" resultMap="BaseResultMap">
+    select sum(registered_num) as registered_num, sum(cuonsum_order_num) as cuonsum_order_num,sum(cuonsum_num) as cuonsum_num,sum(cuonsum_amount) as cuonsum_amount
+    from t_revenue
+    where 1=1
+    <if test="companyList != null">
+      and company_name in
+      <foreach item="item" collection="companyList" open="(" separator="," close=")">
+        #{item}
+      </foreach>
+    </if>
+    <if test="keyword != null and keyword !=''">
+      and ( company_name like '%${keyword}%' or game_name like '%${keyword}%' )
+    </if>
+    <if test="startDate != null">
+      and date >= #{startDate,jdbcType=TIMESTAMP}
+    </if>
+    <if test="endDate != null">
+      and date &lt; #{endDate,jdbcType=TIMESTAMP}
+    </if>
+    <if test="createDate != null">
+      and create_date &lt; #{createDate,jdbcType=TIMESTAMP}
+    </if>
+  </select>
+</mapper>

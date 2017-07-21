@@ -1,6 +1,7 @@
 package com.ibingo.core.dao;
 
 import com.ibingo.core.model.User;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
@@ -24,4 +25,18 @@ public interface UserMapper {
     public Integer selectCount(User queryBean);
 
     public List<User> selectList(User queryBean);
+
+    List<User> selectByBusinessId (Integer id);
+
+    int batchDeleteUser(Integer[] ids);
+
+    public List<User> selectBusinessList();
+
+    public int updateBusiness(User user);
+
+    public int updatePassword(User user);
+
+    public int editPassWordDefault(Integer id);
+
+    public int selectByUsernameAndRole(@Param("username") String username, @Param("userRole")String role);
 }

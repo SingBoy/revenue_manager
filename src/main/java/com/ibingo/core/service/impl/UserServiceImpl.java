@@ -3,6 +3,8 @@ package com.ibingo.core.service.impl;
 
 import com.ibingo.common.pagination.model.PaginationList;
 import com.ibingo.common.pagination.model.SimplePaginatedList;
+import com.ibingo.common.utils.ConstantConfig;
+import com.ibingo.common.utils.MD5Util;
 import com.ibingo.core.dao.UserMapper;
 import com.ibingo.core.model.User;
 import com.ibingo.core.service.UserService;
@@ -32,7 +34,7 @@ public class UserServiceImpl implements UserService {
 			if (user.getStatus() == USER_STATUS_LOCKED) {
 				throw new RuntimeException("账户已经被管理员锁定，暂无法使用!");
 			}
-			if (!password.equalsIgnoreCase(user.getPassword())) {
+			if (!MD5Util.MD5(password).equalsIgnoreCase(user.getPassword())) {
 				throw new RuntimeException("账户或密码有误，请重新输入...");
 			}
 			return user;
@@ -61,7 +63,8 @@ public class UserServiceImpl implements UserService {
 			u.setModifyDate(new Date());
 			return userMapper.updateByPrimaryKeySelective(u) > 0;
 		} else {
-			user.setStatus(1);//默认为禁用状态
+			user.setPassword(MD5Util.MD5("111111"));
+			user.setStatus(2);//默认为禁用状态
 			user.setCreateDate(new Date());
 			return userMapper.insertSelective(user) > 0;
 		}
@@ -70,6 +73,11 @@ public class UserServiceImpl implements UserService {
 	@Override
 	public boolean delete(Integer id) {
 		return userMapper.deleteByPrimaryKey(id) > 0;
+	}
+
+	@Override
+	public boolean batchDelete(Integer[] ids) {
+		return userMapper.batchDeleteUser(ids) > 0;
 	}
 
 	@Override
@@ -105,4 +113,36 @@ public class UserServiceImpl implements UserService {
 		return b;
 	}
 
+	@Override
+	public List<User> getByBusinessId(Integer id) {
+		return userMapper.selectByBusinessId(id);
+	}
+
+	@Override
+	public List<User> selectBusinessList() {
+		return userMapper.selectBusinessList();
+	}
+
+	@Override
+	public int updateBusiness(User userQuery) {
+		return userMapper.updateBusiness(userQuery);
+	}
+
+	@Override
+	public int updatePassword(User user) {
+		return userMapper.updatePassword(user);
+	}
+
+	@Override
+	public int editPassWordDefault(Integer id) {
+		User user = new User();
+		user.setId(id);
+		user.setPassword(MD5Util.MD5("111111"));
+		return userMapper.updatePassword(user);
+	}
+
+	@Override
+	public int selectByUsernameAndRole(String username, String role) {
+		return userMapper.selectByUsernameAndRole(username,role);
+	}
 }

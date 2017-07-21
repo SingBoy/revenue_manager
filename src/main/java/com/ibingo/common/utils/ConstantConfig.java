@@ -13,10 +13,14 @@ public class ConstantConfig {
 	public static final String UID = "uid";
 	
 	public static final String USER = "current_user";
+
+	public static final String ERROR_MESSAGES = "errorMessages";
 	
 	public static final String QUERYBEAN = "queryBean";
 
 	public static final String USERS = "user";
+
+	public static final String BUSINESS_USER_LIST = "businessUserList";
 
 
 

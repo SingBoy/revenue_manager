@@ -2,6 +2,7 @@ package com.ibingo.core.controller;
 
 import com.ibingo.common.controller.BaseController;
 import com.ibingo.common.utils.ConstantConfig;
+import com.ibingo.common.utils.MD5Util;
 import com.ibingo.core.model.User;
 import com.ibingo.core.service.UserService;
 import org.apache.commons.lang3.StringUtils;
@@ -56,11 +57,12 @@ public class LoginController extends BaseController {
 				session.setAttribute(ConstantConfig.UID, user.getId());
 				session.setAttribute(ConstantConfig.USER, user);
 			} else {
-				throw new RuntimeException("账户不存在!");
+				//throw new RuntimeException("账户不存在!");
+				modelMap.put(ConstantConfig.ERROR_MESSAGES, "账户不存在");
 			}
 			return "redirect:/welcome/index";
 		} catch (Exception e) {
-			//modelMap.put(ConstantConfig.ERROR_MESSAGES, e.getMessage());
+			modelMap.put(ConstantConfig.ERROR_MESSAGES, e.getMessage());
 			return "login";
 		}
 	}
@@ -74,6 +76,21 @@ public class LoginController extends BaseController {
 	public String logout(HttpSession session) {
 		if (null != session) {
 			session.invalidate();
+		}
+		return "redirect:/login";
+	}
+
+	@RequestMapping("/updatePassword")
+	public String updatePassword(HttpSession session,ModelMap modelMap,@RequestParam String password,@RequestParam String pwdAgain) {
+		if (null != session) {
+			User user = new User();
+			user = (User) session.getAttribute(ConstantConfig.USER);
+			if(password.equals(pwdAgain)){
+				user.setPassword(MD5Util.MD5(password));
+				userService.updatePassword(user);
+			}else{
+				modelMap.put(ConstantConfig.ERROR_MESSAGES, "两次密码输入不一致!");
+			}
 		}
 		return "redirect:/login";
 	}

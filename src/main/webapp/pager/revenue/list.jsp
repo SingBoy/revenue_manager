@@ -1,5 +1,6 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<%@ taglib prefix="page" uri="http://www.ibingo.net.cn/tags/pagination"%>
 <%--
   Created by IntelliJ IDEA.
   User: lqj
@@ -10,41 +11,37 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 <head>
-
 </head>
 <body>
 <div class="tpl-page-container">
     <div class="tpl-content-wrapper">
-        <%--<div class="tpl-content-page-title">
-            Amaze UI 文字列表
-        </div>--%>
         <ol class="am-breadcrumb">
-            <li><a href="#" class="am-icon-home">数据管理</a></li>
+            <li><a href="#" class="am-icon-align-justify">数据管理</a></li>
             <li class="active"><a href="${pageContext.request.contextPath}/revenue/list">数据列表</a></li>
         </ol>
         <div class="tpl-portlet-components">
-            <div class="portlet-title">
-                <%--<div class="caption font-green bold">
-
-
-                </div>--%>
-                <div class="portlet-input input-small input-inline">
+            <form action="${pageContext.request.contextPath}/revenue/list" method="post" class="form-inline" role="form">
+                 <div class="portlet-title">
+                <div class="portlet-input  input-inline">
                     <div class="input-icon right">
-                        <i class="am-icon-search"></i>
-                        <input type="text" class="form-control form-control-solid" placeholder="搜索..."> </div>
-                </div>
-                <div class="tpl-portlet-input tpl-fz-ml">
-                    <div class="am-btn-group am-btn-group-xs">
-                        <button type="button" class="am-btn am-btn-default am-btn-success" onclick="addButton()"><span class="am-icon-plus"></span> 新增</button>
-                        <button type="button" class="am-btn am-btn-default am-btn-danger" onclick="deleteButton(null)"><span class="am-icon-trash-o"></span> 删除</button>
-                    </div>
-                    <%--<div class="portlet-input input-small input-inline">
-                        <div class="input-icon right">
+                        <input type="text" class="form-control form-control-solid" name="keyword" id="keyword"  value="${queryBean.keyword }"  placeholder="搜索...">
+                        <input type="datetime" class="form-control form-control-solid" name="startDate" id="startDate" value="${queryBean.startDate }" placeholder="开始时间" data-am-datepicker="yyyy-MM-dd" readonly/>
+                        <input type="text" class="form-control form-control-solid" name="endDate" id="endDate" value="${queryBean.endDate }" placeholder="结束时间" data-am-datepicker="yyyy-MM-dd" readonly/>
+                        <div class="am-btn-group am-btn-group-xs">
+                            <button type="submit" class="am-btn am-btn-primary">
+                                <span class="am-icon-search"></span>查询
+                            </button>
                         </div>
-                    </div>--%>
-
-
+                    </div>
                 </div>
+                <c:if test="${sessionScope.current_user.userRole ==1 }">
+                    <div class="tpl-portlet-input tpl-fz-ml">
+                        <div class="am-btn-group am-btn-group-xs">
+                            <button type="button" class="am-btn am-btn-default am-btn-success" onclick="myModalImport()"><span class="am-icon-cloud-upload"></span> 导入</button>
+                            <button type="button" class="am-btn am-btn-default am-btn-danger" onclick="deleteButton(null)"><span class="am-icon-trash-o"></span> 删除</button>
+                        </div>
+                    </div>
+                </c:if>
                 <div class="tpl-block">
                     <div class="am-g">
                         <div class="am-u-sm-12">
@@ -52,21 +49,23 @@
                                 <table class="am-table am-table-striped am-table-hover table-main">
                                     <thead>
                                     <tr>
-                                        <th class="table-check"><input type="checkbox" name="checkbox" class="tpl-table-fz-check"></th>
+                                        <th class="table-check"><input type="checkbox" id="checkboxTh" onclick="allCheck()"  class="tpl-table-fz-check" ></th>
                                         <th class="table-title" width="15%">游戏名称</th>
                                         <th class="table-type" width="20%">公司名称</th>
                                         <th class="table-type" width="12%">新注册用户数</th>
                                         <th class="table-type" width="10%">消费订单数</th>
                                         <th class="table-type" width="10%">消费用户数</th>
                                         <th class="table-type" width="10%">消费金额</th>
-                                        <th class="table-date am-hide-sm-only" width="15%">日期</th>
-                                        <th class="table-set" width="">操作</th>
+                                        <th class="table-date am-hide-sm-only" width="10%">日期</th>
+                                        <c:if test="${sessionScope.current_user.userRole ==1 }">
+                                            <th class="table-set" width="10%">操作</th>
+                                        </c:if>
                                     </tr>
                                     </thead>
                                     <tbody>
                                     <c:forEach items="${pageDataList.pageRecords}" var="item">
                                         <tr>
-                                            <td><input type="checkbox"></td>
+                                            <td><input type="checkbox" name="checkboxInput" value="${item.id}"></td>
                                             <td>${item.gameName}</td>
                                             <td>${item.companyName}</td>
                                             <td>${item.registeredNum}</td>
@@ -74,60 +73,101 @@
                                             <td>${item.cuonsumNum}</td>
                                             <td>${item.cuonsumAmount}</td>
                                             <td class="am-hide-sm-only"><fmt:formatDate value="${item.date}" pattern="yyyy-MM-dd"/> </td>
-                                            <td>
-                                                <div class="am-btn-toolbar">
-                                                    <div class="am-btn-group am-btn-group-xs">
-                                                        <a type="button" href="${pageContext.request.contextPath}/user/doCustomerUpdate/${item.id}?keyword=${queryBean.keyword}&currentPage=${queryBean.currentPage}&pageSize=${queryBean.pageSize}" class="am-btn am-btn-default am-btn-xs am-text-secondary" ><i  class="am-icon-pencil-square-o"></i> 编辑</a>
-                                                        <button class="am-btn am-btn-default am-btn-xs am-text-secondary" onclick="editButton(${item.id})"><span class="am-icon-pencil-square-o"></span> 编辑</button>
-                                                        <button class="am-btn am-btn-default am-btn-xs am-text-danger am-hide-sm-only" onclick="deleteButton(${item.id})"><span class="am-icon-trash-o"></span> 删除</button>
+                                            <c:if test="${sessionScope.current_user.userRole ==1 }">
+                                                <td>
+                                                    <div class="am-btn-toolbar">
+                                                        <div class="am-btn-group am-btn-group-xs">
+                                                            <button type="button" class="am-btn am-btn-default am-btn-xs am-text-danger am-hide-sm-only" onclick="deleteButton(${item.id})"><span class="am-icon-trash-o"></span> 删除</button>
+                                                        </div>
                                                     </div>
-                                                </div>
-                                            </td>
+                                                </td>
+                                            </c:if>
                                         </tr>
                                     </c:forEach>
-
+                                    <tr>
+                                        <th class="table-check"></th>
+                                        <th class="table-title" width="15%">总数</th>
+                                        <th class="table-type" width="20%"></th>
+                                        <th class="table-type" width="12%">${revenueTotal.registeredNum}</th>
+                                        <th class="table-type" width="10%">${revenueTotal.cuonsumOrderNum}</th>
+                                        <th class="table-type" width="10%">${revenueTotal.cuonsumNum}</th>
+                                        <th class="table-type" width="10%">${revenueTotal.cuonsumAmount}</th>
+                                        <th class="table-date am-hide-sm-only" width="10%"></th>
+                                        <c:if test="${sessionScope.current_user.userRole ==1 }">
+                                            <th class="table-set" width="10%"></th>
+                                        </c:if>
+                                    </tr>
                                     </tbody>
                                 </table>
-                                <%--  <div class="am-cf">
+                                <div>
 
-                                      <div class="am-fr">
-                                          <ul class="am-pagination tpl-pagination">
-                                              <li class="am-disabled"><a href="#">«</a></li>
-                                              <li class="am-active"><a href="#">1</a></li>
-                                              <li><a href="#">2</a></li>
-                                              <li><a href="#">3</a></li>
-                                              <li><a href="#">4</a></li>
-                                              <li><a href="#">5</a></li>
-                                              <li><a href="#">»</a></li>
-                                          </ul>
-                                      </div>
-                                  </div>--%>
-                                <hr>
+
+                                </div>
+                                <hr class="wide" />
+                                <div class="footer">
+                                    <!-- 分页  -->
+                                    <c:url var="pageUrl" value="/revenue/list">
+                                        <c:param name="keyword" value="${queryBean.keyword}" />
+                                    </c:url>
+                                    <page:pagerNav modelRef="pageDataList" url="${pageUrl}" type="beyond" />
+                                </div>
                             </form>
                         </div>
                     </div>
                 </div>
                 <div class="tpl-alert"></div>
             </div>
+            </form>
         </div>
     </div>
 </div>
+
+<div class="modal fade" id="myModalImport" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                    X
+                </button>
+                <h4 class="modal-title" id="myModalLabel">
+                   导入数据
+                </h4>
+            </div>
+            <form method="post" action="${pageContext.request.contextPath}/revenue/uploadFileExcel" enctype="multipart/form-data">
+                <div class="modal-body">
+                        <input type="file" name="file" />
+                </div>
+                <input type="text" class="form-control form-control-solid hide" name="keyword" value="${queryBean.keyword }"  />
+                <input type="text" class="form-control form-control-solid hide" name="currentPage" value="${queryBean.currentPage }"  />
+                <input type="text" class="form-control form-control-solid hide" name="pageSize" value="${queryBean.pageSize }"  />
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">关闭
+                    </button>
+                    <button type="submit" class="btn btn-primary">确定</button>
+                </div>
+            </form>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal -->
+</div>
 <script type="text/javascript">
 
-    function addButton(){
-        window.location="${pageContext.request.contextPath}/user/doCustomerSave/?currentPage=${queryBean.currentPage}&pageSize=${queryBean.pageSize}";
-    }
-    function editButton(id){
-        window.location="${pageContext.request.contextPath}/user/doCustomerUpdate/"+id+"?currentPage=${queryBean.currentPage}&pageSize=${queryBean.pageSize}";
+
+    function allCheck(){
+        var flgBox = $("#checkboxTh").is(":checked");
+        $("input[name='checkboxInput']").prop("checked", flgBox);
     }
     function deleteButton(id){
         //id==null时，表示删除多条数据
         if(id == null){
-            var ids = $("input[name='checkbox']:checked").serialize();
+            var ids = new Array();//$("input[name='checkboxInput']:checked").serialize();
+            $.each($('input:checkbox:checked'),function(){
+                if($(this).val()!="on"){//第一条等于on
+                    ids.push($(this).val());
+                }
+            });
             if(ids !=null){
                 if (confirm("你确认要删除选中的数据吗？")){
-                    window.location = "${pageContext.request.contextPath}/user/deleteCustomer/"+ids +
-                        "?keyword="+$("#keyword").val()+"&currentPage="+${queryBean.currentPage}+"&pageSize="+${queryBean.pageSize};
+                    window.location = "${pageContext.request.contextPath}/revenue/delete/?ids="+ids+"&keyword="+$("#keyword").val()+"&currentPage="+${queryBean.currentPage}+"&pageSize="+${queryBean.pageSize};
                 }
             }else{
                 alert("请选择要删除的数据!");
@@ -135,10 +175,15 @@
 
         }else{
             if (confirm("你确认要删除吗？")){
-                window.location = "${pageContext.request.contextPath}/user/deleteCustomer/"+id +
-                    "?keyword="+$("#keyword").val()+"&currentPage="+${queryBean.currentPage}+"&pageSize="+${queryBean.pageSize};
+                window.location = "${pageContext.request.contextPath}/revenue/delete/?ids="+id+"&keyword="+$("#keyword").val()+"&currentPage="+${queryBean.currentPage}+"&pageSize="+${queryBean.pageSize};
             }
         }
+    }
+    function myModalImport(){
+        $('#myModalImport').modal('show').css({
+            width: '100%',
+        });
+        $('.modal').css({'overflow-x':'scroll'});
     }
 </script>
 </body>

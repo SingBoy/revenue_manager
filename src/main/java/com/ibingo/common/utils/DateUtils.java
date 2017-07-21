@@ -221,18 +221,34 @@ public class DateUtils {
 		date=calendar.getTime();   //这个时间就是日期往后推一天的结果
 		return DateUtils.formatDateTimeAll(date);
 	}
-	public static void main(String[] args) {
-		//System.out.println(getHour(new Date()));
-		Integer zone  = 400;
-		//计算时区
-		TimeZone oldZone = TimeZone.getTimeZone("GMT");
-		TimeZone newZone = null;
-		if (zone != null && zone > 0) {
-			newZone = TimeZone.getTimeZone("GMT-" + zone);
-		} else {
-			newZone = TimeZone.getTimeZone("GMT+" + Math.abs(zone));
+
+	public static Date dateSubtracOneHour(Date strDate){
+		Date date = null;
+		long curren = System.currentTimeMillis();
+		curren -= 60 * 60 * 1000;
+		Date da = new Date(curren);
+		return da;
+	}
+
+
+	public static Date CTStoDate(Date ctsTime){
+		Date date = null;
+		if(ctsTime!=null){
+			SimpleDateFormat sf2 = new SimpleDateFormat("yyyy-MM-dd");
+			try {
+				String datestr = sf2.format(ctsTime);
+				date = java.sql.Date.valueOf(datestr);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
 		}
-		String date = changeTimeZone(DateUtils.getYesterday(), TimeZone.getTimeZone("GMT"), newZone);
-		String dates = dateAddOne(date);
+		return date;
+	}
+
+	public static void main(String[] args) {
+		Date date = null;
+		long curren = System.currentTimeMillis();
+		curren -= 60 * 60 * 1000;
+		Date da = new Date(curren);
 	}
 }

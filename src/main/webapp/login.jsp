@@ -34,7 +34,9 @@
 		</div>
 		<div class="am-u-sm-10 login-am-center">
 			<form class="am-form" action="${pageContext.request.contextPath}/login" method="post">
+				<div class=""><span class="am-text-danger">${errorMessages}</span></div>
 				<fieldset>
+
 					<div class="am-form-group">
 						<input type="text" class="" name="username" id="doc-ipt-email-1" placeholder="输入账号">
 					</div>

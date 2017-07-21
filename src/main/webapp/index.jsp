@@ -22,7 +22,7 @@
 <body data-type="generalComponents">
 
 
-       <div id="content" class="tpl-content-wrapper-index">
+       <%--<div id="content" class="tpl-content-wrapper-index">
 
            <div class="tpl-content-scope">
                <div class="note note-info">
@@ -98,7 +98,7 @@
            </div>
 
 
-       </div>
+       </div>--%>
 </div>
 
 

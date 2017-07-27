@@ -35,4 +35,6 @@ public interface UserService {
 	public int editPassWordDefault(Integer id);
 
 	public int selectByUsernameAndRole(String username,String role);
+
+	public Boolean selectByNickName(String nickName);
 }

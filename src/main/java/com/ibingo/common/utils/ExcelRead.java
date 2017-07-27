@@ -9,8 +9,9 @@ import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
-import java.io.InputStream;
+import javax.servlet.http.HttpServletResponse;
+import java.io.*;
+import java.net.URLEncoder;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -158,6 +159,38 @@ public class ExcelRead {
             }
         }
         return null;
+    }
+
+
+
+    public static void writeExcel(List<ArrayList<String>> result, HttpServletResponse response,String name){
+        if(result == null){
+            return;
+        }
+        HSSFWorkbook wb = new HSSFWorkbook();
+        HSSFSheet sheet = wb.createSheet("sheet");
+           for(int i = 0 ;i < result.size() ; i++){
+            HSSFRow row = sheet.createRow(i);
+            for(int j = 0; j < result.get(0).size() ; j ++){
+                HSSFCell cell = row.createCell((short)j);
+                cell.setCellValue(result.get(i).get(j).toString());
+            }
+        }
+        OutputStream fos  = null;
+        try {
+            response.setHeader("content-disposition", "attachment;fileName="+ URLEncoder.encode(name,"UTF-8"));
+            fos = response.getOutputStream();
+            wb.write(fos);
+        }catch (Exception e){
+            e.printStackTrace();
+        }finally {
+            try {
+                fos.close();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+        }
     }
     /**
      * 自定义xssf日期工具类

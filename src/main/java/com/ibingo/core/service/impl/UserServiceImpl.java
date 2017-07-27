@@ -145,4 +145,13 @@ public class UserServiceImpl implements UserService {
 	public int selectByUsernameAndRole(String username, String role) {
 		return userMapper.selectByUsernameAndRole(username,role);
 	}
+
+	@Override
+	public Boolean selectByNickName(String nickName) {
+		int count = userMapper.selectByNickName(nickName);
+		if(count>0){
+			return true;
+		}
+		return false;
+	}
 }

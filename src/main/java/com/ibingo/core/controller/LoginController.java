@@ -40,7 +40,8 @@ public class LoginController extends BaseController {
 				username = URLEncoder.encode(username, "utf-8");
 				Cookie usernameCookie = new Cookie("username", username);
 				Date date = new Date();
-				SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd kk:mm:ss");
+				//tomcat8.5 日期之间不能空格
+				SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-ddkk:mm:ss");
 				String now = sdf.format(date);
 				Cookie dateCookie = new Cookie("date", now);
 

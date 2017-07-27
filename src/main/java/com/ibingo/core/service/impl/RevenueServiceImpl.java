@@ -63,7 +63,12 @@ public class RevenueServiceImpl implements RevenueService {
         return revenueMapper.selectCountTotal(params);
     }
 
-    public Map<String, Object> arrageParams( Revenue revenue,List<String> companyList){
+    @Override
+    public Revenue selectByCompanyName(String companyName) {
+        return revenueMapper.selectByCompanyName(companyName);
+    }
+
+    public Map<String, Object> arrageParams(Revenue revenue, List<String> companyList){
         Map<String, Object> params = new HashMap<String, Object>();
         params.put("keyword",revenue.getKeyword());
         params.put("startDate",revenue.getStartDate());

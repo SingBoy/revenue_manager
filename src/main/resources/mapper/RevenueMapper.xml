@@ -23,7 +23,12 @@
     from t_revenue
     where id = #{id,jdbcType=INTEGER}
   </select>
-
+  <select id="selectByCompanyName" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select
+    <include refid="Base_Column_List" />
+    from t_revenue
+    where company_name = #{companyName,jdbcType=VARCHAR}
+  </select>
 
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
     delete from t_revenue

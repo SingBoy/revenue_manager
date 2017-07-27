@@ -24,4 +24,5 @@ public interface RevenueMapper {
 
     public Revenue selectCountTotal(Map<String, Object> map);
 
+    public Revenue selectByCompanyName(String companyName);
 }

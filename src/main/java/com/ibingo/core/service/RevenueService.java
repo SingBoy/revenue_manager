@@ -21,5 +21,7 @@ public interface RevenueService {
 	public boolean batchInsterRevenue(List<Revenue> revenues);
 
 	public Revenue selectCountTotal(Revenue revenue,List<String> companyList);
+
+	public Revenue selectByCompanyName(String companyName);
 	
 }

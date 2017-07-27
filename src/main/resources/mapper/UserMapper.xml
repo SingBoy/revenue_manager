@@ -41,6 +41,12 @@
     where user_role = 2
   </select>
 
+  <select id="selectByNickName" resultType="java.lang.Integer" parameterType="java.lang.String" >
+    select count(id)
+    from t_user
+    where nickname = #{nickname,jdbcType=VARCHAR} and user_role = 3
+  </select>
+
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
     delete from t_user
     where id = #{id,jdbcType=INTEGER}

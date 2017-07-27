@@ -48,8 +48,8 @@
             <li class="am-dropdown" data-am-dropdown data-am-dropdown-toggle>
                 <a class="am-dropdown-toggle tpl-header-list-link" href="javascript:;">
                     <span class="profile tpl-header-list-user-nick"><span>&nbsp;欢迎您，${sessionScope.current_user.nickname }&nbsp;</span></span>
-                    <li class="am-hide-sm-only"><a href="javascript:;" type="button" onclick="editPasswordDialog()"  id="admin-editpass" class="tpl-header-list-link"><span class="am-icon-cog"></span> <span class="admin-fullText"> 修改密码</span></a></li>
-                    <li class="am-hide-sm-only"><a href="javascript:;" onclick="logout()"  id="admin-logout" class="tpl-header-list-link"><span class="am-icon-power-off"></span> <span class="admin-fullText">退出</span></a></li>
+                    <li class="am-hide-sm-only"><a href="javascript:;" type="button" onclick="editPasswordDialog()"  id="admin-editpass" class="tpl-header-list-link"><span class="am-icon-cog"></span> <span class="admin-"> 修改密码</span></a></li>
+                    <li class="am-hide-sm-only"><a href="javascript:;" onclick="logout()"  id="admin-logout" class="tpl-header-list-link"><span class="am-icon-power-off"></span> <span class="admin-">退出</span></a></li>
                 </a>
                 <%--<ul class="am-dropdown-content tpl-dropdown-content">
                     <li class="am-hide-sm-only"><a href="javascript:;" type="button" onclick="editPasswordDialog()"  id="admin-editpass" class="tpl-header-list-link"><span class="am-icon-cog"></span> <span class="admin-fullText"> 修改密码</span></a></li>

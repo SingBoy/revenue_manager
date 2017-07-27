@@ -105,6 +105,7 @@
                                 </div>
                                 <hr class="wide" />
                                 <div class="footer">
+
                                     <!-- 分页  -->
                                     <c:url var="pageUrl" value="/revenue/list">
                                         <c:param name="keyword" value="${queryBean.keyword}" />
@@ -136,7 +137,10 @@
             <form method="post" action="${pageContext.request.contextPath}/revenue/uploadFileExcel" enctype="multipart/form-data">
                 <div class="modal-body">
                         <input type="file" name="file" />
+                        <label id="importError"></label>
+
                 </div>
+                <input type="text" class="am-text-danger hide" id="importFlg" value="${importFlg}" />
                 <input type="text" class="form-control form-control-solid hide" name="keyword" value="${queryBean.keyword }"  />
                 <input type="text" class="form-control form-control-solid hide" name="currentPage" value="${queryBean.currentPage }"  />
                 <input type="text" class="form-control form-control-solid hide" name="pageSize" value="${queryBean.pageSize }"  />
@@ -151,6 +155,14 @@
 </div>
 <script type="text/javascript">
 
+    window.onload=function()
+    {
+        if($("#importFlg").val()=="false"){
+            myModalImport();
+            $("#importError").text("数据导入错误，请检查后重新导入！")
+            $("#importError").css({"color":"red"});
+        }
+    }
 
     function allCheck(){
         var flgBox = $("#checkboxTh").is(":checked");
@@ -180,6 +192,7 @@
         }
     }
     function myModalImport(){
+        $("#importError").text("")
         $('#myModalImport').modal('show').css({
             width: '100%',
         });

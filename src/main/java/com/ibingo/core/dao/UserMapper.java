@@ -39,4 +39,6 @@ public interface UserMapper {
     public int editPassWordDefault(Integer id);
 
     public int selectByUsernameAndRole(@Param("username") String username, @Param("userRole")String role);
+
+    public int selectByNickName(String nickName);
 }
